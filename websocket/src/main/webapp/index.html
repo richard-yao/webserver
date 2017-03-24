@@ -1,0 +1,28 @@
+<html>
+<body>
+	<title>Tomcat WebSocket Chat</title>
+<head>
+<script>
+	var ws = new WebSocket("ws://10.12.22.201:8089/websocket/websocket");
+	ws.onopen = function() {
+	};
+	ws.onmessage = function(message) {
+		document.getElementById("chatlog").textContent += message.data + "\n";
+	};
+	function postToServer() {
+		ws.send(document.getElementById("msg").value);
+		document.getElementById("msg").value = "";
+	}
+	function closeConnect() {
+		ws.close();
+	}
+</script>
+</head>
+
+<textarea id="chatlog" readonly></textarea>
+<br />
+<input id="msg" type="text" />
+<button type="submit" id="sendButton" onClick="postToServer()">Send!</button>
+<button type="submit" id="sendButton" onClick="closeConnect()">End</button>
+</body>
+</html>

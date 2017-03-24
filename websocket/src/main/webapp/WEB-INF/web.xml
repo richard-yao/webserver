@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.4"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>websocket</display-name>
+
+	<servlet>
+		<servlet-name>wsServlet</servlet-name>
+		<servlet-class>com.richard.test.DemoServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>testServlet</servlet-name>
+		<servlet-class>com.richard.test.TestServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>wsServlet</servlet-name>
+		<url-pattern>/wsServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>testServlet</servlet-name>
+		<url-pattern>/testServlet</url-pattern>
+	</servlet-mapping>
+</web-app>
