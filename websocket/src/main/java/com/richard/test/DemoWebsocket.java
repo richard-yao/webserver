@@ -3,11 +3,14 @@ package com.richard.test;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import javax.servlet.http.HttpSession;
+import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 /**
@@ -16,7 +19,7 @@ import javax.websocket.server.ServerEndpoint;
  * @ServerEndpoint 注解是一个类层次的注解，它的功能主要是将目前的类定义成一个websocket服务器端,
  *                 注解的值将被用于监听用户连接的终端访问URL地址,客户端可以通过这个URL来连接到WebSocket服务器端
  */
-@ServerEndpoint("/websocket")
+@ServerEndpoint(value = "/websocket/{clientId}", configurator = HttpSessionConfigurator.class)
 public class DemoWebsocket {
 
 	private static int onlineCount = 0;
@@ -26,16 +29,20 @@ public class DemoWebsocket {
 	private Session session;
 
 	@OnOpen
-	public void onOpen(Session session) {
+	public void onOpen(Session session, EndpointConfig config, @PathParam("clientId") String clientId) {
+		HttpSession httpSession= (HttpSession) config.getUserProperties().get(HttpSession.class.getName());
+		if(httpSession != null && httpSession.getAttribute("clientName") != null) {
+			System.out.println("ClientName is " + httpSession.getAttribute("clientName"));
+		}
 		this.session = session;
 		webSocketSet.add(this);
 		addOnlineCount();
 		try {
-			sendMessage("Hello guys!");
+			sendMessage("Hello guys! I am " + clientId);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+		System.out.println("New client join, the online number is " + getOnlineCount());
 	}
 
 	/**
@@ -45,12 +52,12 @@ public class DemoWebsocket {
 	public void onClose() {
 		webSocketSet.remove(this); // 从set中删除
 		subOnlineCount(); // 在线数减1
-		System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+		System.out.println("A connection lost, now online number is " + getOnlineCount());
 	}
 
 	@OnMessage
 	public void onMessage(String message, Session session) {
-		System.out.println("来自客户端的消息:" + message);
+		System.out.println("Message from client:" + message);
 		// 群发消息
 		for (DemoWebsocket item : webSocketSet) {
 			try {
@@ -64,7 +71,7 @@ public class DemoWebsocket {
 
 	@OnError
 	public void onError(Session session, Throwable error) {
-		System.out.println("发生错误");
+		System.out.println("Something Wrong");
 		error.printStackTrace();
 	}
 

@@ -1,9 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
 <html>
-<body>
-	<title>Tomcat WebSocket Chat</title>
 <head>
+<title>Tomcat WebSocket Chat</title>
 <script>
-	var ws = new WebSocket("ws://10.12.22.201:8089/websocket/websocket");
+	var clientId = "1234567";
+	var ws = new WebSocket("ws://10.12.22.201:8092/websocket/websocket/" + clientId);
 	ws.onopen = function() {
 	};
 	ws.onmessage = function(message) {
@@ -18,6 +21,10 @@
 	}
 </script>
 </head>
+<body>
+<%
+	request.getSession().setAttribute("clientName", "richardyao");
+%>
 
 <textarea id="chatlog" readonly></textarea>
 <br />

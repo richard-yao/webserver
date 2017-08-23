@@ -4,6 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<display-name>websocket</display-name>
 
+	<listener>
+		<listener-class>com.richard.test.RequestListener</listener-class>
+	</listener>
 	<servlet>
 		<servlet-name>wsServlet</servlet-name>
 		<servlet-class>com.richard.test.DemoServlet</servlet-class>
